@@ -3,7 +3,7 @@ name = "mytorch"
 version = "0.1.0"
 description = "A self-written torch-like ML package."
 authors = [
-  { name = "bobito25", email = "" }
+  { name = "bobito25" }
 ]
 readme = "README.md"
 license = { text = "MIT" }
@@ -12,7 +12,13 @@ classifiers = [
   "Programming Language :: Python :: 3",
   "License :: OSI Approved :: MIT License"
 ]
-dependencies = []
+dependencies = [
+  "numpy>=2.3.5,<3"
+]
+[dependency-groups]
+dev = [
+  "pytest >=9.0.1,<10"
+]
 
 [project.urls]
 "Homepage" = "https://github.com/bobito25/mytorch"
