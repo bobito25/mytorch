@@ -31,3 +31,23 @@ class Tensor:
         if not self.dim == other.dim:
             raise ValueError("Dimensions of operands of tensor addition must be equal:", self.dim, "!=", other.dim)
         return Tensor(self.data + other.data)
+
+    def __radd__(self, other: "Tensor"):
+        return self.__add__(other)
+    
+    def __mul__(self, other: "Tensor"):
+        """
+        Tensor element-wise multiplication (returns new tensor).
+
+        :param self: First Tensor opperand
+        :param other: Second Tensor opperand
+        :type other: Tensor
+        """
+        if not isinstance(other, Tensor):
+            return NotImplemented
+        if not self.dim == other.dim:
+            raise ValueError("Dimensions of operands of tensor addition must be equal:", self.dim, "!=", other.dim)
+        return Tensor(np.multiply(self.data, other.data))
+    
+    def __rmul__(self, other: "Tensor"):
+        return self.__mul__(other)

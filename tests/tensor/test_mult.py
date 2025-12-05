@@ -1,16 +1,16 @@
-"""Addition tests for the tensor package."""
+"""Multiplication tests for the tensor package."""
 
 import numpy as np
 
 from mytorch.tensor import Tensor
 
 
-def test_tensor_add() -> None:
+def test_tensor_multiplication() -> None:
     a = Tensor([1,2])
     b = Tensor([2,3])
-    r = a + b
-    r2 = b + a
-    expected = np.array([3,5])
+    r = a * b
+    r2 = b * a
+    expected = np.array([2,6])
 
     # check dimensions
     assert r.dim == a.dim
