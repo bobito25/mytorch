@@ -25,5 +25,5 @@ dev = [
 "Bug Tracker" = "https://github.com/bobito25/mytorch/issues"
 
 [build-system]
-requires = ["setuptools>=80.9.0", "wheel>=0.45.1"]
+requires = ["setuptools>=80.9.0"]
 build-backend = "setuptools.build_meta"
