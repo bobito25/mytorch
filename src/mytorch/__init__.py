@@ -1,5 +1,5 @@
 """Top-level package for mytorch."""
 
-from .core import version, example
+from .core import version
 
-__all__ = ["version", "example"]
+__all__ = ["version"]

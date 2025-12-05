@@ -1,10 +1,6 @@
 """Basic tests for the mytorch package."""
 
-from mytorch import example, version
-
-
-def test_example_adds_values() -> None:
-    assert example(1.5, 2.5) == 4.0
+from mytorch import version
 
 
 def test_version_string() -> None:
