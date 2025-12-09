@@ -4,18 +4,7 @@ Implements the Tensor class for the MyTorch library.
 
 import numpy as np
 
-
-class GradOperation:
-    def __init__(self, op_name: str, backward_fn: callable, operands: list["Tensor"]):
-        self.op_name = op_name
-        self.operands = operands
-        self.backward_fn = backward_fn
-
-    def backward(self, grad):
-        for operand in self.operands:
-            if operand.requires_grad:
-                new_grad = self.backward_fn(operand, self.operands.copy().remove(operand))
-                operand.backward(new_grad * grad)
+from mytorch.autograd import GradOperation
 
 
 class Tensor:
@@ -33,6 +22,35 @@ class Tensor:
         self.requires_grad = requires_grad
         self.grad = None
         self.grad_op: GradOperation = None  # operation that created this tensor
+
+    def __eq__(self, other: "Tensor"):
+        if not isinstance(other, Tensor):
+            return NotImplemented
+        return (self.data==other.data).all()
+
+    def __str__(self):
+        return "Tensor(" + str(self.data) + ")"
+
+    def __repr__(self):
+        r = "Tensor("
+        r += str(self.data) + ", "
+        r += "requires_grad=" + str(self.requires_grad) + ", "
+        if self.grad is not None:
+            r += "grad=" + str(self.grad) + ", "
+        if self.grad_op is not None:
+            r += "grad_op=" + str(self.grad_op) + ", "
+        r = r.removesuffix(", ")
+        r += ")"
+        return r
+
+    def __copy__(self):
+        return Tensor(self.data, self.requires_grad)
+    
+    def __deepcopy__(self):
+        t = Tensor(self.data, self.requires_grad)
+        t.grad = self.grad
+        t.grad_op = self.grad_op
+        return t
 
     def __add__(self, other: "Tensor"):
         """
@@ -52,10 +70,11 @@ class Tensor:
 
     def __radd__(self, other: "Tensor"):
         return self.__add__(other)
-    
+
+    @classmethod
     def _add_backward(cls, self, operands):
         return Tensor(np.ones_like(self.data), requires_grad=False)
-    
+
     def __mul__(self, other: "Tensor"):
         """
         Tensor element-wise multiplication (returns new tensor).
@@ -71,10 +90,11 @@ class Tensor:
         t = Tensor(np.multiply(self.data, other.data), requires_grad=self.requires_grad or other.requires_grad)
         t.grad_op = GradOperation("tensor-mult", Tensor._mul_backward, [self, other])
         return t
-    
+
     def __rmul__(self, other: "Tensor"):
         return self.__mul__(other)
 
+    @classmethod
     def _mul_backward(cls, self, operands):
         if len(operands) != 1:
             raise ValueError("Backward pass for tensor addition with more than 2 operands is not supported.")
@@ -83,15 +103,23 @@ class Tensor:
     def backward(self, grad=None):
         if grad == None:
             if not self.requires_grad:
-                raise ValueError("Cannot compute gradient in tensor that has .requires_grad == False")
+                raise ValueError("Cannot perform backward in tensor that has .requires_grad == False.")
             if self.grad_op == None:
-                raise ValueError("Cannot perform compute gradient when no operation has been performed on this tensor.")
-            # keep propagating
-            self.grad_op.backward(grad)
+                raise ValueError("Cannot perform backward when no operation has been performed on this tensor.")
+            raise NotImplementedError()
         else:
             if not self.requires_grad:
                 # stop recursion
                 return
+            if grad.dim != self.dim:
+                raise ValueError("Grad must be of same dim as tensor.")
             if self.grad_op == None:
                 # leaf node
-                self.grad = grad
+                if self.grad == None:
+                    self.grad = grad
+                else:
+                    # if grad exists, accumulate
+                    self.grad += grad
+                return
+        # keep propagating
+        self.grad_op.backward(grad)
