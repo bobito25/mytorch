@@ -45,8 +45,8 @@ class Tensor:
 
     def __copy__(self):
         return Tensor(self.data, self.requires_grad)
-    
-    def __deepcopy__(self):
+
+    def __deepcopy__(self, memo):
         t = Tensor(self.data, self.requires_grad)
         t.grad = self.grad
         t.grad_op = self.grad_op
