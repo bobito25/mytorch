@@ -16,5 +16,4 @@ Minimal scaffold for the `mytorch` Python package.
 
 ## Development
 
-Install dev dependencies then run `python -m pytest` to exercise the basic smoke tests.
-Use python -m pytest --cov=mytorch --cov-report=term-missing to check test coverage.
+Install dev dependencies then run `pytest` to run tests and generate a coverage report.
