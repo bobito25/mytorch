@@ -13,3 +13,7 @@ dist/
 
 # Caches
 .pytest_cache
+
+# Coverage
+htmlcov/
+.coverage

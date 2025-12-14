@@ -17,7 +17,8 @@ dependencies = [
 ]
 [dependency-groups]
 dev = [
-  "pytest >=9.0.1,<10"
+  "pytest >=9.0.1,<10",
+  "pytest-cov>=7.0.0,<8",
 ]
 
 [project.urls]
@@ -27,3 +28,6 @@ dev = [
 [build-system]
 requires = ["setuptools>=80.9.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+addopts = "--cov=mytorch --cov-report html --cov-config=.coveragerc"

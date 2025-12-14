@@ -1,0 +1,9 @@
+[run]
+source = src/mytorch
+omit =
+    */tests/*
+    */test_*.py
+
+[report]
+exclude_lines =
+    raise NotImplementedError
