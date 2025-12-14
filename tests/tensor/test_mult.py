@@ -81,3 +81,46 @@ def test_tensor_multiplication_backward() -> None:
     new_t = Tensor([1,2], requires_grad=True)
     new_t.backward(grad_in)
     assert new_t.grad == grad_in
+
+
+def test_tensor_deep_multiplication_backward() -> None:
+    a = Tensor([1,2])
+    b = Tensor([2,3], requires_grad=False)
+    c = Tensor([3,4])
+    d = Tensor([4,5], requires_grad=False)
+    r1: Tensor = a * b
+    r2: Tensor = r1 * c
+    r3: Tensor = r2 * d
+    
+    assert r1.requires_grad == True
+    assert r2.requires_grad == True
+    assert r3.requires_grad == True
+
+    assert a.grad_op is None
+    assert b.grad_op is None
+    assert c.grad_op is None
+    assert d.grad_op is None
+
+    assert isinstance(r1.grad_op, GradOperation)
+    assert r1.grad_op.op_name == "tensor-mult"
+    assert r1.grad_op.backward_fn == Tensor._mul_backward
+    assert r1.grad_op.operands == [a, b]
+    assert isinstance(r2.grad_op, GradOperation)
+    assert r2.grad_op.op_name == "tensor-mult"
+    assert r2.grad_op.backward_fn == Tensor._mul_backward
+    assert r2.grad_op.operands == [r1, c]
+    assert isinstance(r3.grad_op, GradOperation)
+    assert r3.grad_op.op_name == "tensor-mult"
+    assert r3.grad_op.backward_fn == Tensor._mul_backward
+    assert r3.grad_op.operands == [r2, d]
+
+    grad_in = Tensor([1,1])
+    r3.backward(grad_in)
+
+    assert r1.grad == None
+    assert r2.grad == None
+    assert r3.grad == None
+    assert a.grad == Tensor([2,3]) * Tensor([3,4]) * Tensor([4,5])  # a*b*c = Tensor([24,60])
+    assert b.grad == None
+    assert c.grad == Tensor([2,6]) * Tensor([4,5])  # r1*d == Tensor([8,30])
+    assert d.grad == None
