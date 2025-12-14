@@ -100,8 +100,8 @@ class Tensor:
             raise ValueError("Backward pass for tensor addition with more than 2 operands is not supported.")
         return Tensor(operands[0].data, requires_grad=False)
 
-    def backward(self, grad=None):
-        if grad == None:
+    def backward(self, grad_out=None):
+        if grad_out == None:
             if not self.requires_grad:
                 raise ValueError("Cannot perform backward in tensor that has .requires_grad == False.")
             if self.grad_op == None:
@@ -111,15 +111,15 @@ class Tensor:
             if not self.requires_grad:
                 # stop recursion
                 return
-            if grad.dim != self.dim:
+            if grad_out.dim != self.dim:
                 raise ValueError("Grad must be of same dim as tensor.")
             if self.grad_op == None:
                 # leaf node
                 if self.grad == None:
-                    self.grad = grad
+                    self.grad = grad_out
                 else:
                     # if grad exists, accumulate
-                    self.grad += grad
+                    self.grad += grad_out
                 return
         # keep propagating
-        self.grad_op.backward(grad)
+        self.grad_op.backward(grad_out)

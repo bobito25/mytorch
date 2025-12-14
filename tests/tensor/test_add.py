@@ -57,16 +57,16 @@ def test_tensor_add_backward() -> None:
     assert grad_op.backward_fn == Tensor._add_backward
     assert grad_op.operands == [a, b]
 
-    grad_in = Tensor([1,1])
-    r.backward(grad_in)
+    grad_out = Tensor([1,1])
+    r.backward(grad_out)
 
     assert r.grad == None
     assert a.grad == Tensor([1,1])
     assert b.grad == None
 
     a.grad = None  # reset
-    grad_in = Tensor([2,3])
-    r.backward(grad_in)
+    grad_out = Tensor([2,3])
+    r.backward(grad_out)
     assert a.grad == Tensor([2,3])
 
     invalid_grad = Tensor([1,1,1])
@@ -75,12 +75,12 @@ def test_tensor_add_backward() -> None:
     
     a.grad = None
     r.requires_grad = False
-    r.backward(grad_in)
+    r.backward(grad_out)
     assert a.grad == None
 
     new_t = Tensor([1,2], requires_grad=True)
-    new_t.backward(grad_in)
-    assert new_t.grad == grad_in
+    new_t.backward(grad_out)
+    assert new_t.grad == grad_out
 
 
 def test_tensor_deep_add_backward() -> None:
@@ -114,8 +114,8 @@ def test_tensor_deep_add_backward() -> None:
     assert r3.grad_op.backward_fn == Tensor._add_backward
     assert r3.grad_op.operands == [r2, d]
 
-    grad_in = Tensor([1,1])
-    r3.backward(grad_in)
+    grad_out = Tensor([1,1])
+    r3.backward(grad_out)
 
     assert r1.grad == None
     assert r2.grad == None
