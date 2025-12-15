@@ -1,3 +1,5 @@
+"""Serialization tests for the tensor package."""
+
 from mytorch.tensor import Tensor
 from mytorch.autograd import GradOperation
 
