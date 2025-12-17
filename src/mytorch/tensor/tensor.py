@@ -88,14 +88,14 @@ class Tensor:
         if not self.dim == other.dim:
             raise ValueError("Dimensions of operands of tensor addition must be equal:", self.dim, "!=", other.dim)
         t = Tensor(np.multiply(self.data, other.data), requires_grad=self.requires_grad or other.requires_grad)
-        t.grad_op = GradOperation("tensor-mult", Tensor._mul_backward, [self, other])
+        t.grad_op = GradOperation("tensor-elem-mult", Tensor._elem_mul_backward, [self, other])
         return t
 
     def __rmul__(self, other: "Tensor"):
         return self.__mul__(other)
 
     @classmethod
-    def _mul_backward(cls, self, operands):
+    def _elem_mul_backward(cls, self, operands):
         if len(operands) != 1:
             raise ValueError("Backward pass for tensor addition with more than 2 operands is not supported.")
         return Tensor(operands[0].data, requires_grad=False)

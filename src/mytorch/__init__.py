@@ -2,4 +2,6 @@
 
 from .core import version
 
-__all__ = ["version"]
+from .tensor import Tensor, tmult
+
+__all__ = [version, Tensor, tmult]

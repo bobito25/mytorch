@@ -53,8 +53,8 @@ def test_tensor_multiplication_backward() -> None:
     grad_op = r.grad_op
 
     assert isinstance(grad_op, GradOperation)
-    assert grad_op.op_name == "tensor-mult"
-    assert grad_op.backward_fn == Tensor._mul_backward
+    assert grad_op.op_name == "tensor-elem-mult"
+    assert grad_op.backward_fn == Tensor._elem_mul_backward
     assert grad_op.operands == [a, b]
 
     grad_out = Tensor([1,1])
@@ -102,16 +102,16 @@ def test_tensor_deep_multiplication_backward() -> None:
     assert d.grad_op is None
 
     assert isinstance(r1.grad_op, GradOperation)
-    assert r1.grad_op.op_name == "tensor-mult"
-    assert r1.grad_op.backward_fn == Tensor._mul_backward
+    assert r1.grad_op.op_name == "tensor-elem-mult"
+    assert r1.grad_op.backward_fn == Tensor._elem_mul_backward
     assert r1.grad_op.operands == [a, b]
     assert isinstance(r2.grad_op, GradOperation)
-    assert r2.grad_op.op_name == "tensor-mult"
-    assert r2.grad_op.backward_fn == Tensor._mul_backward
+    assert r2.grad_op.op_name == "tensor-elem-mult"
+    assert r2.grad_op.backward_fn == Tensor._elem_mul_backward
     assert r2.grad_op.operands == [r1, c]
     assert isinstance(r3.grad_op, GradOperation)
-    assert r3.grad_op.op_name == "tensor-mult"
-    assert r3.grad_op.backward_fn == Tensor._mul_backward
+    assert r3.grad_op.op_name == "tensor-elem-mult"
+    assert r3.grad_op.backward_fn == Tensor._elem_mul_backward
     assert r3.grad_op.operands == [r2, d]
 
     grad_out = Tensor([1,1])

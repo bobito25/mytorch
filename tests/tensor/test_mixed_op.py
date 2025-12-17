@@ -27,20 +27,20 @@ def test_tensor_deep_mixed_backward() -> None:
     assert e.grad_op is None
 
     assert isinstance(r1.grad_op, GradOperation)
-    assert r1.grad_op.op_name == "tensor-mult"
-    assert r1.grad_op.backward_fn == Tensor._mul_backward
+    assert r1.grad_op.op_name == "tensor-elem-mult"
+    assert r1.grad_op.backward_fn == Tensor._elem_mul_backward
     assert r1.grad_op.operands == [a, b]
     assert isinstance(r2.grad_op, GradOperation)
-    assert r2.grad_op.op_name == "tensor-mult"
-    assert r2.grad_op.backward_fn == Tensor._mul_backward
+    assert r2.grad_op.op_name == "tensor-elem-mult"
+    assert r2.grad_op.backward_fn == Tensor._elem_mul_backward
     assert r2.grad_op.operands == [c, d]
     assert isinstance(r3.grad_op, GradOperation)
     assert r3.grad_op.op_name == "tensor-add"
     assert r3.grad_op.backward_fn == Tensor._add_backward
     assert r3.grad_op.operands == [r1, r2]
     assert isinstance(r4.grad_op, GradOperation)
-    assert r4.grad_op.op_name == "tensor-mult"
-    assert r4.grad_op.backward_fn == Tensor._mul_backward
+    assert r4.grad_op.op_name == "tensor-elem-mult"
+    assert r4.grad_op.backward_fn == Tensor._elem_mul_backward
     assert r4.grad_op.operands == [r3, e]
 
     grad_out = Tensor([1,1])
