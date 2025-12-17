@@ -37,7 +37,7 @@ def test_tensor_add_forward() -> None:
     assert id(r.data) != id(a.data)
     assert id(r.data) != id(b.data)
     assert id(r.data) != id(r2.data)
-    assert id(a.data != b.data)
+    assert id(a.data) != id(b.data)
 
 
 def test_tensor_add_backward() -> None:

@@ -123,3 +123,14 @@ class Tensor:
                 return
         # keep propagating
         self.grad_op.backward(grad_out)
+
+    def reshape(self, shape: tuple):
+        """
+        Reshapes data to given shape.
+
+        :param shape: goal shape
+        :type shape: tuple
+        """
+        self.data = self.data.reshape(shape)
+        self.dim = shape
+        return self
