@@ -7,7 +7,7 @@ import numpy as np
 from .tensor import Tensor
 
 
-def tmult(x: Tensor, y: Tensor, axes: tuple[list], dim_out: tuple):
+def tmult(x: Tensor, y: Tensor, axes: tuple[list], dim_out: tuple) -> Tensor:
     """
     Tensor multiplication for two tensors x and y.
     The output shape must be given explicitly.
@@ -44,9 +44,9 @@ def tmult(x: Tensor, y: Tensor, axes: tuple[list], dim_out: tuple):
         if x.dim[x_axes[i]] != y.dim[y_axes[i]]:
             raise ValueError("axes at index", i, "do not match:", x.dim[x_axes[i]], "!=", y.dim[y_axes[i]])
 
-    t = Tensor(np.tensordot(x,y,axes=axes), requires_grad=x.requires_grad or y.requires_grad)
+    t = Tensor(np.tensordot(x.data,y.data,axes=axes), requires_grad=x.requires_grad or y.requires_grad)
 
     if t.dim != dim_out:
-        raise ValueError("output of tmult is not of expected shape", dim_out, "but instead of shape", t.dim)
+        raise ValueError("output of tensor multiplication is not of expected shape", dim_out, "but instead of shape", t.dim)
 
     return t

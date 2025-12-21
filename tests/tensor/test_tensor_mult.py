@@ -10,17 +10,19 @@ def test_tensor_multiplication_forward() -> None:
     assert a.dim == (2,3)
     b = Tensor([[-1,1],[-2,2],[-3,3]])
     assert b.dim == (3,2)
-    r = tmult(a,b,axes=([1],[0]),dim_out=(2,2))
-    r2 = tmult(b,a,axes=([0],[1]),dim_out=(2,2))
-    expected = np.array([[-4,4],[2,-2]])
+    r: Tensor = tmult(a,b,axes=([1],[0]),dim_out=(2,2))
+    r2: Tensor = tmult(b,a,axes=([0],[1]),dim_out=(2,2))
+    expected = np.array([[2,-2],[2,-2]])
 
     # check dimensions
     assert r.dim == expected.shape
     assert r2.dim == expected.shape
 
     # check result values
+    print(r2.data)
+    print(expected)
     assert (r.data == expected).all()
-    assert (r2.data == expected).all()
+    assert (r2.data == expected.T).all()
 
     # check original values
     assert (a.data == np.array([[1,0,-1],[2,1,-2]])).all()
